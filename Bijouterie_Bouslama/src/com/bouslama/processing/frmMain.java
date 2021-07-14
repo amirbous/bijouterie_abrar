@@ -21,10 +21,10 @@ import javax.swing.table.DefaultTableModel;
 public class frmMain extends JFrame{
 	public JLabel bijouterie = new JLabel("Bijouterie Bouslama");
 	JButton add_item = new JButton("ajouter");
-	JTable table;
+	static JTable table;
 	JScrollPane tablescrollPane;
-	Object[][] data;
-	String[] columnNames = {"reference", "designation", "date_entree", "fournisseur", "poid", "prix_gramme", "prix_revient", "date_sortie", "prix_vente"};
+	static Object[][] data;
+	static String[] columnNames = {"reference", "designation", "date_entree", "fournisseur", "poid", "prix_gramme", "prix_revient", "date_sortie", "prix_vente"};
 	
 	List<Marchandise> items;
 	
@@ -72,7 +72,7 @@ public class frmMain extends JFrame{
 	
 	
 	//
-	public void update_data(Object[][] data) {
+	public static void update_data(Object[][] data) {
 		MarchandiseManagement data_handling = new MarchandiseManagement();
 		data_handling.read_data();
 		

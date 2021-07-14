@@ -8,6 +8,8 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -28,6 +30,7 @@ import net.miginfocom.swing.MigLayout;
 
 public class frmAddItem extends JFrame{
 	
+	String selection;
 	List<Marchandise> items;
 	int reference_pointer;
 	JPanel reference_panel = new JPanel(new MigLayout("wrap 2"));
@@ -65,7 +68,7 @@ public class frmAddItem extends JFrame{
 	Object[][] table_data;
 	JButton add_data = new JButton("ajouter l'item");
 	JScrollPane tablescrollpane;
-	String fournisseur_selectionnee;
+	
 	JPanel read_data = new JPanel(new MigLayout("wrap 2"));
 	JPanel display_data = new JPanel();
 	
@@ -101,10 +104,10 @@ public class frmAddItem extends JFrame{
 				}}
 			
 		}
+	
 		
 		
 		
-		fournisseur_selectionnee = "pas de selection";
 		
 		MarchandiseManagement management = new MarchandiseManagement();
 		
@@ -131,15 +134,7 @@ public class frmAddItem extends JFrame{
 		lire_reference.setColumns(7);
 		
 		
-		lire_fournisseur.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				fournisseur_selectionnee = lire_fournisseur.getSelectedItem().toString();
-				
-			}
-		});
+		
 		
 		lire_designation.setColumns(15);
 		lire_reference_id.setColumns(7);
@@ -157,7 +152,7 @@ public class frmAddItem extends JFrame{
 		
 		reference_panel.add(lire_reference);
 		reference_panel.add(lire_reference_id);
-	
+		selection = "";
 		date_entree_panel.add(jour_entree);
 		date_entree_panel.add(mois_entree);
 		date_entree_panel.add(annee_entree);
@@ -184,17 +179,32 @@ public class frmAddItem extends JFrame{
 		read_data.add(prix_vente);
 		read_data.add(lire_prix_vente);
 		added_data = new JTable(donne, columnnames);
+		
 		add_data.addActionListener(new ActionListener() {
 		
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
 				if(e.getActionCommand() == "ajouter l'item") {
-					Marchandise marchandise = new Marchandise(lire_reference.getText() + "_" + lire_reference_id.getText(), lire_designation.getText(),
-							"2016", fournisseur_selectionnee, 
+					
+					if(!lire_prix_vente.getText().equals(""))
+					{Marchandise marchandise = new Marchandise(lire_reference.getText() + "_" + lire_reference_id.getText(), lire_designation.getText(),
+							get_selection(jour_entree) + "/" + get_selection(mois_entree) + "/" + annee_entree.getText(), get_selection(lire_fournisseur), 
 							Float.parseFloat(lire_poids.getText()), Integer.parseInt(lire_prix_gramme.getText()),
 							Integer.parseInt(lire_prix_revient.getText()),
-							"2019", Integer.parseInt(lire_prix_vente.getText()));
-					items.add(marchandise);
+							get_selection(jour_sortie) + "/" + get_selection(mois_sortie) + "/" + annee_sortie.getText(), Integer.parseInt(lire_prix_vente.getText()));
+							items.add(marchandise);
+					}else {
+						Marchandise marchandise = new Marchandise(lire_reference.getText() + "_" + lire_reference_id.getText(), lire_designation.getText(),
+								get_selection(jour_entree) + "/" + get_selection(mois_entree) + "/" + annee_entree.getText(), get_selection(lire_fournisseur), 
+								Float.parseFloat(lire_poids.getText()), Integer.parseInt(lire_prix_gramme.getText()),
+								Integer.parseInt(lire_prix_revient.getText()),
+								"00", Integer.parseInt("0"));
+								items.add(marchandise);
+						
+					}
+					
+					
 					System.out.println(items.size());				}
 				donne = new Object[items.size()][9];
 				table_data = new Object[items.size()][2];
@@ -273,8 +283,15 @@ public class frmAddItem extends JFrame{
 					
 					
 					}
+					
+					frmMain.update_data(frmMain.data);
 					dispose();
 				
+					
+				}
+				else {
+					System.out.println();
+					
 				}
 				
 				
@@ -311,6 +328,45 @@ public class frmAddItem extends JFrame{
 		
 		}	
 	}
+	public String get_selection(JComboBox<String> selection_box) {
+		
+		selection_box.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent action) {
+				selection = selection_box.getSelectedItem().toString();
+						
+			}
+		});
+		
+		return selection;
+		
+		
+	}
+	
+	
+	
+	public boolean validate_date(int d, int m, int y) {
+		String date = String.valueOf(d) + "-" + String.valueOf(m) + "-" + String.valueOf(y);
+		
+		
+		try{
+			DateFormat df = new SimpleDateFormat(date);
+			df.setLenient(false);
+			df.parse(date);
+			return true;
+			
+			
+		}catch (Exception e) {
+			return false;
+		}
+		
+		
+		
+		
+		
+	}
+	
 }
 
 

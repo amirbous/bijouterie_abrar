@@ -30,6 +30,7 @@ public class MarchandiseManagement {
 				Marchandise marchandise;
 				marchandise = new Marchandise(item[0], item[1], item[2], item[3], Float.parseFloat(item[4]), Integer.parseInt(item[5]), Integer.parseInt(item[6]), item[7], Integer.parseInt(item[8]));
 				items.add(marchandise);
+				
 				}
 			}			
 			catch (Exception e) {
