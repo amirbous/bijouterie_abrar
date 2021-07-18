@@ -8,11 +8,15 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -265,13 +269,18 @@ public class frmAddItem extends JFrame{
 							
 						}	
 						else {
-							try{Marchandise marchandise = new Marchandise(lire_reference.getText() + "_" + lire_reference_id.getText(), lire_designation.getText(),
+							try{
+								if(validate_date(m_e_selection, j_e_selection, annee_entree.getText()) == false){
+									JOptionPane.showMessageDialog(new JFrame(), "date invalide", "Dialog",
+									        JOptionPane.ERROR_MESSAGE);
+								}else{
+									Marchandise marchandise = new Marchandise(lire_reference.getText() + "_" + lire_reference_id.getText(), lire_designation.getText(),
 									j_e_selection + "/" + m_e_selection + "/" + annee_entree.getText(), selection_fournisseur, 
 									Float.parseFloat(lire_poids.getText()), Integer.parseInt(lire_prix_gramme.getText()),
 									Integer.parseInt(lire_prix_revient.getText()),
 									"00", 0);
 									items.add(marchandise);
-									validate_data(items);
+									validate_data(items);}
 							}catch (Exception exception) {
 								// TODO: handle exception
 								JOptionPane.showMessageDialog(new JFrame(), "entree invalide", "Dialog",
@@ -291,20 +300,24 @@ public class frmAddItem extends JFrame{
 									m_s_selection.equals("-") || annee_sortie.getText().equals("")) {
 								
 								
-								JOptionPane.showMessageDialog(new JFrame(), "remplir tous les champs", "Dialog",
+									JOptionPane.showMessageDialog(new JFrame(), "remplir tous les champs", "Dialog",
 								        JOptionPane.ERROR_MESSAGE);
 								
 							}	
 							else {
 								
 								try{
-									Marchandise marchandise = new Marchandise(lire_reference.getText() + "_" + lire_reference_id.getText(), lire_designation.getText(),
+									if(!validate_date(m_e_selection, j_e_selection, annee_entree.getText()) == false){
+										JOptionPane.showMessageDialog(new JFrame(), "date invalide", "Dialog",
+										        JOptionPane.ERROR_MESSAGE);
+									}else{
+										Marchandise marchandise = new Marchandise(lire_reference.getText() + "_" + lire_reference_id.getText(), lire_designation.getText(),
 										j_e_selection + "/" + m_e_selection + "/" + annee_entree.getText(), selection_fournisseur, 
 										Float.parseFloat(lire_poids.getText()), Integer.parseInt(lire_prix_gramme.getText()),
 										Integer.parseInt(lire_prix_revient.getText()),
 										j_s_selection + "/" + m_s_selection + "/" + annee_sortie.getText(), Integer.parseInt(lire_prix_vente.getText()));
 										items.add(marchandise);
-										validate_data(items);
+										validate_data(items);}
 									}catch (Exception exception) {
 										// TODO: handle exception
 										JOptionPane.showMessageDialog(new JFrame(), "entree invalide", "Dialog",
@@ -359,7 +372,7 @@ public class frmAddItem extends JFrame{
 					
 				}
 				else {
-					System.out.println();
+					System.out.println("error");
 					
 				}
 				
@@ -381,6 +394,60 @@ public class frmAddItem extends JFrame{
 		this.add(tablescrollpane);
 		this.add(confirmer);
 		
+		addWindowListener(new WindowListener() {
+			
+			@Override
+			public void windowClosing(WindowEvent arg0) {
+				if(items.size() != 0) {
+					int confirm_close = JOptionPane.showConfirmDialog(null, new JLabel("voulez vous ignorer les modifications"), "Bijouterie Bouslama", JOptionPane.OK_CANCEL_OPTION);
+					if(confirm_close == 0) {
+						dispose();
+						
+					}
+					
+					
+				}
+				
+			}
+
+			@Override
+			public void windowActivated(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void windowClosed(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void windowDeactivated(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void windowDeiconified(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void windowIconified(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void windowOpened(WindowEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		
+		});
+		
 	}
 	public void getreference(int reference_pointer) {
 		int x = 10;
@@ -400,23 +467,12 @@ public class frmAddItem extends JFrame{
 	
 	
 	
-	public boolean validate_date(int d, int m, int y) {
-		String date = String.valueOf(d) + "-" + String.valueOf(m) + "-" + String.valueOf(y);
+	public boolean validate_date(String m, String d, String y) {
 		
-		
-		try{
-			DateFormat df = new SimpleDateFormat(date);
-			df.setLenient(false);
-			df.parse(date);
-			return true;
-			
-			
-		}catch (Exception e) {
-			return false;
-		}
-		
-		
-		
+		String date = m + "-" + d + "-" + y;
+		Pattern Date_Pattern = Pattern.compile(MarchandiseManagement.Date_REGEX);
+		Matcher matcher = Date_Pattern.matcher(date);
+        return matcher.matches();
 		
 		
 	}

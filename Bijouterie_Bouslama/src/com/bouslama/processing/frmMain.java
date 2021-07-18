@@ -42,13 +42,21 @@ public class frmMain extends JFrame{
 		this.setPreferredSize(new Dimension(1000, 600));
 		this.setResizable(false);
 		this.setDefaultCloseOperation(this.EXIT_ON_CLOSE);
-		
+		 
 		
 		
 		tablescrollPane = new JScrollPane(table);
 		
 		add_item.setBounds(10, 450, 100, 20);
 		vente_item.setBounds(130, 450, 100, 20);
+		vente_item.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		add_item.addActionListener(new ActionListener() {
 			
 			@Override
