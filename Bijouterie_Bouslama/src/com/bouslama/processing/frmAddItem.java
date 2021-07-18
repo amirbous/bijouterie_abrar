@@ -15,9 +15,11 @@ import java.util.List;
 import java.util.Scanner;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -30,7 +32,8 @@ import net.miginfocom.swing.MigLayout;
 
 public class frmAddItem extends JFrame{
 	
-	String selection;
+	String selection_fournisseur, j_e_selection, m_e_selection, j_s_selection, m_s_selection;
+	boolean vente_realise;
 	List<Marchandise> items;
 	int reference_pointer;
 	JPanel reference_panel = new JPanel(new MigLayout("wrap 2"));
@@ -43,14 +46,16 @@ public class frmAddItem extends JFrame{
 	JLabel reference = new JLabel("reference");
 	JLabel designation = new JLabel("designation");
 	String[] fournisseurs = {"pas de selection", "B.M.H", "H.M.M"};
-	JComboBox lire_fournisseur = new JComboBox(fournisseurs);
+	JComboBox<String> lire_fournisseur = new JComboBox<String>(fournisseurs);
 	JLabel date_entree = new JLabel("date d'entree");
 	JLabel poids = new JLabel("poids");
 	JLabel prix_gramme = new JLabel("prix gramme");
 	JLabel prix_revient = new JLabel("prix de revient");
+	JLabel etat_vente = new JLabel("etat de vente");
 	JLabel date_sortie = new JLabel("date de sortie");
 	JLabel prix_vente = new JLabel("prix de vente");
 	JTable added_data;
+	JCheckBox lire_vente = new JCheckBox("vendu");
 	JTextField lire_reference = new JTextField();
 	JTextField lire_reference_id = new JTextField();
 	JTextField lire_designation = new JTextField();
@@ -104,7 +109,18 @@ public class frmAddItem extends JFrame{
 				}}
 			
 		}
-	
+		vente_realise = false;
+		lire_vente.addActionListener(new ActionListener() {
+			
+			
+			public void actionPerformed(ActionEvent action) {
+				
+				vente_realise = lire_vente.isSelected();
+				System.out.println(vente_realise);
+				
+			}
+		});
+		
 		
 		
 		
@@ -152,7 +168,11 @@ public class frmAddItem extends JFrame{
 		
 		reference_panel.add(lire_reference);
 		reference_panel.add(lire_reference_id);
-		selection = "";
+		selection_fournisseur = "";
+		j_e_selection = "-";
+		m_e_selection = "-";
+		j_s_selection = "-";
+		m_s_selection = "-";
 		date_entree_panel.add(jour_entree);
 		date_entree_panel.add(mois_entree);
 		date_entree_panel.add(annee_entree);
@@ -174,11 +194,56 @@ public class frmAddItem extends JFrame{
 		read_data.add(lire_prix_gramme);
 		read_data.add(prix_revient);
 		read_data.add(lire_prix_revient);
+		read_data.add(etat_vente);
+		read_data.add(lire_vente);
 		read_data.add(date_sortie);
 		read_data.add(date_sortie_panel);
 		read_data.add(prix_vente);
 		read_data.add(lire_prix_vente);
 		added_data = new JTable(donne, columnnames);
+		
+		lire_fournisseur.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				selection_fournisseur = lire_fournisseur.getSelectedItem().toString();
+			}
+		});
+		jour_entree.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				j_e_selection = jour_entree.getSelectedItem().toString();
+			}
+		});
+		mois_entree.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				m_e_selection = mois_entree.getSelectedItem().toString();
+			}
+		});
+		jour_sortie.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				j_s_selection = jour_sortie.getSelectedItem().toString();
+			}
+		});
+		mois_sortie.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				m_s_selection = mois_sortie.getSelectedItem().toString();
+			}
+		});
+				
+		
 		
 		add_data.addActionListener(new ActionListener() {
 		
@@ -187,69 +252,73 @@ public class frmAddItem extends JFrame{
 				
 				if(e.getActionCommand() == "ajouter l'item") {
 					
-					if(!lire_prix_vente.getText().equals(""))
-					{Marchandise marchandise = new Marchandise(lire_reference.getText() + "_" + lire_reference_id.getText(), lire_designation.getText(),
-							get_selection(jour_entree) + "/" + get_selection(mois_entree) + "/" + annee_entree.getText(), get_selection(lire_fournisseur), 
-							Float.parseFloat(lire_poids.getText()), Integer.parseInt(lire_prix_gramme.getText()),
-							Integer.parseInt(lire_prix_revient.getText()),
-							get_selection(jour_sortie) + "/" + get_selection(mois_sortie) + "/" + annee_sortie.getText(), Integer.parseInt(lire_prix_vente.getText()));
-							items.add(marchandise);
-					}else {
-						Marchandise marchandise = new Marchandise(lire_reference.getText() + "_" + lire_reference_id.getText(), lire_designation.getText(),
-								get_selection(jour_entree) + "/" + get_selection(mois_entree) + "/" + annee_entree.getText(), get_selection(lire_fournisseur), 
-								Float.parseFloat(lire_poids.getText()), Integer.parseInt(lire_prix_gramme.getText()),
-								Integer.parseInt(lire_prix_revient.getText()),
-								"00", Integer.parseInt("0"));
-								items.add(marchandise);
+					if(!vente_realise) {
+						if(j_e_selection.equals("-") || m_e_selection.equals("-") || 
+								annee_entree.getText().equals("") || lire_reference.getText().equals("") ||
+								lire_designation.getText().equals("") || lire_reference_id.getText().equals("") ||
+								selection_fournisseur.equals("pas de selection") || lire_poids.getText().equals("") ||
+								lire_prix_revient.getText().equals("") || lire_prix_gramme.equals("")) {
+							
+							
+							JOptionPane.showMessageDialog(new JFrame(), "remplir tous les champs", "Dialog",
+							        JOptionPane.ERROR_MESSAGE);
+							
+						}	
+						else {
+							try{Marchandise marchandise = new Marchandise(lire_reference.getText() + "_" + lire_reference_id.getText(), lire_designation.getText(),
+									j_e_selection + "/" + m_e_selection + "/" + annee_entree.getText(), selection_fournisseur, 
+									Float.parseFloat(lire_poids.getText()), Integer.parseInt(lire_prix_gramme.getText()),
+									Integer.parseInt(lire_prix_revient.getText()),
+									"00", 0);
+									items.add(marchandise);
+									validate_data(items);
+							}catch (Exception exception) {
+								// TODO: handle exception
+								JOptionPane.showMessageDialog(new JFrame(), "entree invalide", "Dialog",
+								        JOptionPane.ERROR_MESSAGE);
+							}
+							
+						} 
 						
+					}else if(vente_realise) {
+					
+							if(j_e_selection.equals("-") || m_e_selection.equals("-") || 
+									annee_entree.getText().equals("") || lire_reference.getText().equals("") ||
+									lire_designation.getText().equals("") || lire_reference_id.getText().equals("") ||
+									selection_fournisseur.equals("pas de selection") || lire_poids.getText().equals("") ||
+									lire_prix_revient.getText().equals("") || lire_prix_gramme.equals("")||
+									lire_prix_vente.getText().equals("") || j_s_selection.equals("-") || 
+									m_s_selection.equals("-") || annee_sortie.getText().equals("")) {
+								
+								
+								JOptionPane.showMessageDialog(new JFrame(), "remplir tous les champs", "Dialog",
+								        JOptionPane.ERROR_MESSAGE);
+								
+							}	
+							else {
+								
+								try{
+									Marchandise marchandise = new Marchandise(lire_reference.getText() + "_" + lire_reference_id.getText(), lire_designation.getText(),
+										j_e_selection + "/" + m_e_selection + "/" + annee_entree.getText(), selection_fournisseur, 
+										Float.parseFloat(lire_poids.getText()), Integer.parseInt(lire_prix_gramme.getText()),
+										Integer.parseInt(lire_prix_revient.getText()),
+										j_s_selection + "/" + m_s_selection + "/" + annee_sortie.getText(), Integer.parseInt(lire_prix_vente.getText()));
+										items.add(marchandise);
+										validate_data(items);
+									}catch (Exception exception) {
+										// TODO: handle exception
+										JOptionPane.showMessageDialog(new JFrame(), "entree invalide", "Dialog",
+										        JOptionPane.ERROR_MESSAGE);
+									}
+								
+								
+								
+							}
+								
 					}
-					
-					
-					System.out.println(items.size());				}
-				donne = new Object[items.size()][9];
-				table_data = new Object[items.size()][2];
-				for(int i = 0; i <= items.size() - 1; i++) {
-					donne[i][0] = items.get(i).getreference();
-					donne[i][1] = items.get(i).getdesignation();
-					donne[i][2] = items.get(i).getdate_entree();
-					donne[i][3] = items.get(i).getfournisseur();
-					donne[i][4] = items.get(i).getpoid();
-					donne[i][5] = items.get(i).getprix_gramme();
-					donne[i][6] = items.get(i).getprix_revient();
-					
-					if(items.get(i).getdate_sortie().equals("00")) {
-						donne[i][7] = "-";}else{donne[i][7] = items.get(i).getdate_sortie();}
-					
-					if(items.get(i).getprix_vente() == 0) {
-						donne[i][8] = "-";}else{donne[i][8] = items.get(i).getprix_vente();}
-					String s = donne[i][0].toString() + " " +donne[i][1].toString() + " " + donne[i][2].toString() + " " + 
-							donne[i][3].toString() + " " + donne[i][4].toString() + " " + donne[i][5].toString() + " " + 
-							donne[i][6].toString() + " " + donne[i][7].toString() + " " + donne[i][8].toString();
-					table_data[i][0] = s;
-					table_data[i][1] = "x";
-				}
-				
-				added_data.setModel(new DefaultTableModel(table_data ,columnnames));
-				added_data.getColumn("suppr").setPreferredWidth(30);
-				added_data.getColumn("proprietées").setPreferredWidth(550);
-				
-				reference_pointer = Integer.parseInt(lire_reference.getText()) + 1;
-				getreference(reference_pointer);
-				
-				jour_entree.setSelectedIndex(0);
-				mois_entree.setSelectedIndex(0);
-				jour_sortie.setSelectedIndex(0);
-				mois_sortie.setSelectedIndex(0);
-				annee_entree.setText("");
-				lire_designation.setText("");
-				lire_fournisseur.setSelectedIndex(0);
-				lire_poids.setText("");
-				lire_prix_gramme.setText("");
-				lire_prix_revient.setText("");
-				annee_sortie.setText("");
-				lire_prix_vente.setText("");
 				
 				
+				}	
 			}
 		});
 		
@@ -328,21 +397,6 @@ public class frmAddItem extends JFrame{
 		
 		}	
 	}
-	public String get_selection(JComboBox<String> selection_box) {
-		
-		selection_box.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent action) {
-				selection = selection_box.getSelectedItem().toString();
-						
-			}
-		});
-		
-		return selection;
-		
-		
-	}
 	
 	
 	
@@ -366,6 +420,56 @@ public class frmAddItem extends JFrame{
 		
 		
 	}
+	public void validate_data(List<Marchandise> items) {
+		donne = new Object[items.size()][9];
+		table_data = new Object[items.size()][2];
+		for(int i = 0; i <= items.size() - 1; i++) {
+			donne[i][0] = items.get(i).getreference();
+			donne[i][1] = items.get(i).getdesignation();
+			donne[i][2] = items.get(i).getdate_entree();
+			donne[i][3] = items.get(i).getfournisseur();
+			donne[i][4] = items.get(i).getpoid();
+			donne[i][5] = items.get(i).getprix_gramme();
+			donne[i][6] = items.get(i).getprix_revient();
+			donne[i][7] = items.get(i).getdate_sortie();
+			donne[i][8] = items.get(i).getprix_vente();
+			String s = donne[i][0].toString() + " " +donne[i][1].toString() + " " + donne[i][2].toString() + " " + 
+					donne[i][3].toString() + " " + donne[i][4].toString() + " " + donne[i][5].toString() + " " + 
+					donne[i][6].toString() + " " + donne[i][7].toString() + " " + donne[i][8].toString();
+			table_data[i][0] = s;
+			table_data[i][1] = "x";
+		}
+		
+		added_data.setModel(new DefaultTableModel(table_data ,columnnames));
+		added_data.getColumn("suppr").setPreferredWidth(30);
+		added_data.getColumn("proprietées").setPreferredWidth(550);
+		
+		reference_pointer = Integer.parseInt(lire_reference.getText()) + 1;
+		getreference(reference_pointer);
+		selection_fournisseur = "pas de selection";
+		j_s_selection = "-";
+		m_s_selection = "-";
+		j_e_selection = "-";
+		m_e_selection = "-";
+		jour_entree.setSelectedIndex(0);
+		mois_entree.setSelectedIndex(0);
+		jour_sortie.setSelectedIndex(0);
+		mois_sortie.setSelectedIndex(0);
+		annee_entree.setText("");
+		lire_designation.setText("");
+		lire_fournisseur.setSelectedIndex(0);
+		lire_poids.setText("");
+		lire_prix_gramme.setText("");
+		lire_prix_revient.setText("");
+		annee_sortie.setText("");
+		lire_prix_vente.setText("");
+		
+		
+		
+		
+		
+	}
+	
 	
 }
 

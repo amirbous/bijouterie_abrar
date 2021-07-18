@@ -21,6 +21,7 @@ import javax.swing.table.DefaultTableModel;
 public class frmMain extends JFrame{
 	public JLabel bijouterie = new JLabel("Bijouterie Bouslama");
 	JButton add_item = new JButton("ajouter");
+	JButton vente_item = new JButton("vente");
 	static JTable table;
 	JScrollPane tablescrollPane;
 	static Object[][] data;
@@ -47,12 +48,12 @@ public class frmMain extends JFrame{
 		tablescrollPane = new JScrollPane(table);
 		
 		add_item.setBounds(10, 450, 100, 20);
+		vente_item.setBounds(130, 450, 100, 20);
 		add_item.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent action) {
 				if(action.getActionCommand() == "ajouter") {
-					System.out.println("working");
 					frmAddItem frmadditem = new frmAddItem();
 					
 				}
@@ -63,6 +64,7 @@ public class frmMain extends JFrame{
 		tablescrollPane.setBounds(10, 50, 800, 400);
 		
 		add(add_item);
+		add(vente_item);
 		add(bijouterie);
 		add(tablescrollPane);
 		this.pack();
