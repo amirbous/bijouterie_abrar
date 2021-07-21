@@ -18,6 +18,7 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
+import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -400,7 +401,7 @@ public class frmAddItem extends JFrame{
 			public void windowClosing(WindowEvent arg0) {
 				if(items.size() != 0) {
 					int confirm_close = JOptionPane.showConfirmDialog(null, new JLabel("voulez vous ignorer les modifications"), "Bijouterie Bouslama", JOptionPane.OK_CANCEL_OPTION);
-					if(confirm_close == 0) {
+					if(confirm_close == JOptionPane.OK_OPTION) {
 						dispose();
 						
 					}
@@ -528,5 +529,6 @@ public class frmAddItem extends JFrame{
 	
 	
 }
+
 
 
