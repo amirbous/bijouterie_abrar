@@ -1,10 +1,12 @@
 package com.abrar.processing;
 
+import java.beans.DesignMode;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
@@ -60,6 +62,29 @@ public class MarchandiseManagement {
 		}
 		catch (Exception e) {
 			System.out.println("error");
+		}
+		
+		
+	}
+	
+	public String match_item(String complete_reference) {
+		try{
+			scanner = new Scanner(data_file); 
+			while(scanner.hasNextLine()) {
+				
+				if(scanner.next().substring(0, 9).equals(complete_reference)) {
+					
+					break;
+				
+					}
+				
+			}
+			return scanner.next().toString();
+		
+		}			
+		catch (Exception e) {
+		System.out.println("waldehe tneket");		
+		return "item deja vendu";
 		}
 		
 		

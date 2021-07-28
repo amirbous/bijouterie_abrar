@@ -53,7 +53,7 @@ public class frmMain extends JFrame{
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
+				frmVente frmvente = new frmVente();
 				
 			}
 		});
