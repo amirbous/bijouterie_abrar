@@ -275,7 +275,13 @@ public class frmAddItem extends JFrame{
 									JOptionPane.showMessageDialog(new JFrame(), "date invalide", "Dialog",
 									        JOptionPane.ERROR_MESSAGE);
 								}else{
-									Marchandise marchandise = new Marchandise(lire_reference.getText() + "_" + lire_reference_id.getText(), lire_designation.getText(),
+									StringBuilder designation_modifiee = new StringBuilder(lire_designation.getText());
+									for(int j = 0; j < designation_modifiee.length(); j++) {
+										if(designation_modifiee.charAt(j) == ' ') {
+											designation_modifiee.setCharAt(j, '_');
+										}
+									}
+									Marchandise marchandise = new Marchandise(lire_reference.getText() + "_" + lire_reference_id.getText(), designation_modifiee.toString(),
 									j_e_selection + "/" + m_e_selection + "/" + annee_entree.getText(), selection_fournisseur, 
 									Float.parseFloat(lire_poids.getText()), Integer.parseInt(lire_prix_gramme.getText()),
 									Integer.parseInt(lire_prix_revient.getText()),
@@ -308,11 +314,17 @@ public class frmAddItem extends JFrame{
 							else {
 								
 								try{
-									if(!validate_date(m_e_selection, j_e_selection, annee_entree.getText()) == false){
+									if(validate_date(m_e_selection, j_e_selection, annee_entree.getText()) == false){
 										JOptionPane.showMessageDialog(new JFrame(), "date invalide", "Dialog",
 										        JOptionPane.ERROR_MESSAGE);
 									}else{
-										Marchandise marchandise = new Marchandise(lire_reference.getText() + "_" + lire_reference_id.getText(), lire_designation.getText(),
+										StringBuilder designation_modifiee = new StringBuilder(lire_designation.getText());
+										for(int j = 0; j < designation_modifiee.length(); j++) {
+											if(designation_modifiee.charAt(j) == ' ') {
+												designation_modifiee.setCharAt(j, '_');
+											}
+										}
+										Marchandise marchandise = new Marchandise(lire_reference.getText() + "_" + lire_reference_id.getText(), designation_modifiee.toString(),
 										j_e_selection + "/" + m_e_selection + "/" + annee_entree.getText(), selection_fournisseur, 
 										Float.parseFloat(lire_poids.getText()), Integer.parseInt(lire_prix_gramme.getText()),
 										Integer.parseInt(lire_prix_revient.getText()),

@@ -21,7 +21,7 @@ public class frmVente extends JFrame{
 	
 	
 	public frmVente() {
-		String reference_101 = "0015_2021";
+		String reference_tosale = "0015_2021";
 		
 		this.setLayout(new FlowLayout());
 		check_item.addActionListener(new ActionListener() {
@@ -29,7 +29,9 @@ public class frmVente extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				MarchandiseManagement management = new MarchandiseManagement();
-				System.out.println(management.match_item("0004_2021"));
+				
+				System.out.println(management.match_item(reference_tosale));
+				
 				
 			}
 		});

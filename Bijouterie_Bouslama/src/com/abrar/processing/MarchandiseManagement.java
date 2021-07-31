@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class MarchandiseManagement {
+	private String sold_line;
 	static final String Date_REGEX =
             "^(?:(?:(?:0?[13578]|1[02])(\\/|-|\\.)31)\\1|" +
             "(?:(?:0?[1,3-9]|1[0-2])(\\/|-|\\.)(?:29|30)\\2))" +
@@ -67,19 +68,22 @@ public class MarchandiseManagement {
 		
 	}
 	
+	
 	public String match_item(String complete_reference) {
+		sold_line = "";
 		try{
-			scanner = new Scanner(data_file); 
+			scanner = new Scanner(data_file);
+			
 			while(scanner.hasNextLine()) {
-				
-				if(scanner.next().substring(0, 9).equals(complete_reference)) {
+				sold_line = scanner.next();
+				if(sold_line.substring(0, 9).equals(complete_reference)) {
 					
 					break;
 				
 					}
 				
 			}
-			return scanner.next().toString();
+			return sold_line;
 		
 		}			
 		catch (Exception e) {
